@@ -153,19 +153,20 @@ fn place_tooltip(
 
     let placement = &ctx.tooltip.placement;
 
-    // Calculate target position.
+    // Calculate target position, in physical pixels like `ComputedNode` and `UiGlobalTransform`.
     let mut pos = if let TargetPoint::Fixed(target_anchor) = placement.target_point {
         target_gt.translation - target_computed.size * target_anchor.0 * Vec2::new(-1.0, 1.0)
     } else {
-        ctx.cursor_pos
+        // The cursor position is in the window's logical pixels.
+        ctx.cursor_pos * camera.target_scaling_factor().unwrap_or(1.0)
     };
 
     // Apply tooltip anchor to target position.
     pos += computed.size * placement.anchor_point.0 * Vec2::new(-1.0, 1.0);
 
-    // Resolve offset `Val`s.
+    // Resolve offset `Val`s, scaling `Val::Px` by `UiScale` as well as the window's scale factor.
     let size = viewport.size().as_vec2();
-    let scale = camera.target_scaling_factor().unwrap_or(1.0);
+    let scale = computed.inverse_scale_factor.recip();
     let offset_x = placement
         .offset_x
         .resolve(scale, size.x, size)
@@ -220,8 +221,8 @@ fn place_tooltip(
         pos.y = round_ties_up(pos.y + 0.5) - 0.5;
     }
 
-    // Set position via `Node`.
-    let top_left = pos - half_size;
+    // Set position via `Node`, which is in logical pixels.
+    let top_left = (pos - half_size) * computed.inverse_scale_factor;
     let mut node = r!(node_query.get_mut(entity));
     node.left = Val::Px(top_left.x);
     node.top = Val::Px(top_left.y);
