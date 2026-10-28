@@ -1,6 +1,7 @@
 //! A demonstration of some tooltip content options.
 
 use bevy::color::palettes::tailwind::*;
+use bevy::picking::hover::Hovered;
 use bevy::prelude::*;
 use bevy::sprite::Anchor;
 use bevy::ui::Val::*;
@@ -70,15 +71,17 @@ fn tile(content: impl Into<TooltipContent>) -> impl Bundle {
         },
         BackgroundColor(Color::WHITE),
         BorderColor::all(Color::BLACK),
+        Hovered::default(),
         Tooltip::fixed(Anchor::TOP_CENTER, content),
     )
 }
 
-fn highlight_hovered_tile(mut tile_query: Query<(&Interaction, &mut BackgroundColor)>) {
-    for (interaction, mut background_color) in &mut tile_query {
-        background_color.0 = match interaction {
-            Interaction::None => Color::NONE,
-            _ => Color::WHITE,
-        }
+fn highlight_hovered_tile(mut tile_query: Query<(&Hovered, &mut BackgroundColor)>) {
+    for (hovered, mut background_color) in &mut tile_query {
+        background_color.0 = if hovered.get() {
+            Color::WHITE
+        } else {
+            Color::NONE
+        };
     }
 }

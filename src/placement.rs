@@ -167,14 +167,12 @@ fn place_tooltip(
     // Resolve offset `Val`s, scaling `Val::Px` by `UiScale` as well as the window's scale factor.
     let size = viewport.size().as_vec2();
     let scale = computed.inverse_scale_factor.recip();
-    let offset_x = placement
-        .offset_x
-        .resolve(scale, size.x, size)
-        .unwrap_or_default();
-    let offset_y = placement
-        .offset_y
-        .resolve(scale, size.y, size)
-        .unwrap_or_default();
+    let resolve = |val: Val, base: f32| {
+        val.resolve(scale, base, size, computed.em_size, computed.rem_size)
+            .unwrap_or_default()
+    };
+    let offset_x = resolve(placement.offset_x, size.x);
+    let offset_y = resolve(placement.offset_y, size.y);
 
     // Apply offset.
     pos += Vec2::new(offset_x, offset_y);
@@ -186,10 +184,10 @@ fn place_tooltip(
         top,
         bottom,
     } = placement.clamp_padding;
-    let left = left.resolve(scale, size.x, size).unwrap_or_default();
-    let right = right.resolve(scale, size.x, size).unwrap_or_default();
-    let top = top.resolve(scale, size.x, size).unwrap_or_default();
-    let bottom = bottom.resolve(scale, size.x, size).unwrap_or_default();
+    let left = resolve(left, size.x);
+    let right = resolve(right, size.x);
+    let top = resolve(top, size.x);
+    let bottom = resolve(bottom, size.x);
 
     // Apply clamping.
     let half_size = computed.size / 2.0;

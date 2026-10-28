@@ -1,5 +1,11 @@
 # Next version
 
+# Version 0.8.0
+
+- **Updated to Bevy 0.20**
+- Fixed tooltip placement on HiDPI displays
+- Fixed tooltip placement sometimes running before UI layout
+
 # Version 0.7.0
 
 - **Updated to Bevy 0.19**

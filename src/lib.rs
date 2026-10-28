@@ -84,12 +84,17 @@ use bevy_ecs::{
 use bevy_sprite::Anchor;
 use bevy_text::Justify;
 use bevy_transform::TransformSystems;
-use bevy_ui::{
-    BackgroundColor, GlobalZIndex, Interaction, Node, PositionType, UiRect, UiSystems, Val,
-};
+use bevy_ui::{BackgroundColor, GlobalZIndex, Node, PositionType, UiRect, UiSystems, Val};
 
 pub use placement::TooltipPlacement;
 pub use rich_text::{RichText, RichTextSystems, TextSection, TextStyle};
+
+// TODO: Switch to `Hovered` and `Pressed` before Bevy 0.21 removes `Interaction`.
+#[expect(
+    deprecated,
+    reason = "Tooltips still detect hover and click through `Interaction`."
+)]
+type Interaction = bevy_ui::Interaction;
 
 /// A [`Plugin`] that sets up the tooltip widget system.
 ///

@@ -12,12 +12,12 @@ use bevy_ecs::{
 };
 use bevy_math::Vec2;
 use bevy_time::{Real, Time};
-use bevy_ui::{Interaction, UiStack};
+use bevy_ui::UiStack;
 use bevy_window::{PrimaryWindow, Window, WindowRef};
 use tiny_bail::prelude::*;
 
 use crate::{
-    Tooltip, TooltipContent, TooltipSettings, TooltipSystems, placement::TargetPoint,
+    Interaction, Tooltip, TooltipContent, TooltipSettings, TooltipSystems, placement::TargetPoint,
     rich_text::RichText,
 };
 
