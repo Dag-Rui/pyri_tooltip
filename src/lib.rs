@@ -129,7 +129,9 @@ impl Plugin for TooltipPlugin {
             PostUpdate,
             (
                 TransformSystems::Propagate,
-                TooltipSystems::Placement.run_if(tooltips_enabled),
+                TooltipSystems::Placement
+                    .after(UiSystems::Layout)
+                    .run_if(tooltips_enabled),
             )
                 .chain(),
         );
